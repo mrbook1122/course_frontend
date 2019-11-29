@@ -35,18 +35,25 @@ const MenuButton = props => {
 
 const Course = props => {
     const [weeks, setWeeks] = useState([])
+    const [current, setCurrent] = useState(0)
     useEffect(() => {
-        if (weeks.length === 0) {
+        if (weeks.length === 0 && current === 0) {
             axios.get('http://47.100.136.150:8080/')
                 .then(resp => {
-                    setWeeks(resp.data)
+                    setWeeks(resp.data.weeks)
+                    setCurrent(resp.data.current)
                 })
         }
     })
     useEffect(() => {
-        new Swiper ('.swiper-container', {
-            loop: false
-        })
+        if (weeks.length > 0) {
+            let swiper = new Swiper ('.swiper-container', {
+            })
+            swiper.slideTo(current, 0)
+            return () => {
+                swiper.destroy()
+            }
+        }
     })
     return (
         <Container>
